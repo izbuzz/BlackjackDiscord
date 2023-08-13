@@ -188,12 +188,11 @@ async function startGame(interaction, players) {
     // only the current player can tap the buttons
     const filter = async (i) => {
       if (i.member.id !== player.id) {
-	await i.reply({ content: "Not your turn yet", ephemeral: true });
-	return false;
+        await i.reply({ content: "Not your turn yet", ephemeral: true });
+        return false;
       }
       return true;
-    }
-
+    };
     try {
       let move = await message.awaitMessageComponent({
         componentType: ComponentType.Button,
@@ -257,7 +256,7 @@ async function startGame(interaction, players) {
 
   if (!winner) {
     embed.setDescription("No one won...");
-  } else if (player === dealer) {
+  } else if (winner === dealer) {
     embed.setDescription(`The Dealer has won!`);
   } else {
     embed.setDescription(`${winner} has won!`);
@@ -268,8 +267,7 @@ async function startGame(interaction, players) {
     button.setDisabled(true);
   }
   // send winning message
-  await interaction.editReply({ embeds: [embed],  components: [row] });
-
+  await interaction.editReply({ embeds: [embed], components: [row] });
 }
 
 /**
