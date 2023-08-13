@@ -14,7 +14,7 @@ module.exports = {
 
   async execute(interaction) {
     const players = new Set();
-    const host = interaction.user;
+    const host = interaction.member;
     players.add(host);
 
     // create the buttons
@@ -36,10 +36,10 @@ module.exports = {
 
     const embed = new EmbedBuilder()
       .setTitle("Blackjack")
-      .setDescription(`${host.username} has started a blackjack game!`)
+      .setDescription(`${host.displayName} has started a blackjack game!`)
       .addFields({
         name: "Players",
-        value: host.username,
+        value: host.displayName,
       });
 
     const message = await interaction.reply({
@@ -55,11 +55,11 @@ module.exports = {
     collector.on("collect", async (i) => {
       // anyone can join
       if (i.customId === "join") {
-        if (!players.has(i.user)) {
-          players.add(i.user);
+        if (!players.has(i.member)) {
+          players.add(i.member);
           embed.setFields({
             name: "Players",
-            value: [...players].map((p) => p.username).join("\n"),
+            value: [...players].map((p) => p.displayName).join("\n"),
           });
           await interaction.editReply({ embeds: [embed] });
           await i.reply({ content: "Joined game", ephemeral: true });
@@ -73,7 +73,7 @@ module.exports = {
       }
 
       // host only commands
-      if (i.user !== host) {
+      if (i.member !== host) {
         await i.reply({ content: "You are not the host", ephemeral: true });
         return;
       }
@@ -130,7 +130,7 @@ async function startGame(interaction, players) {
     } else {
       // players' hands
       embed.addFields({
-        name: player.username,
+        name: player.displayName,
         value: hand.map((c) => printCard(c)).join(", "),
         inline: false,
       });
@@ -187,7 +187,7 @@ async function startGame(interaction, players) {
     // player's turn
     // only the current player can tap the buttons
     const filter = async (i) => {
-      if (i.user.id !== player.id) {
+      if (i.member.id !== player.id) {
 	await i.reply({ content: "Not your turn yet", ephemeral: true });
 	return false;
       }
@@ -213,7 +213,7 @@ async function startGame(interaction, players) {
           if (sumHand(hand) > 21) {
             editEmbedField(
               embed,
-              player.username,
+              player.displayName,
               "Busted! " + hand.map((c) => printCard(c)).join(", "),
             );
             playerHands.delete(player);
@@ -224,7 +224,7 @@ async function startGame(interaction, players) {
 
           editEmbedField(
             embed,
-            player.username,
+            player.displayName,
             hand.map((c) => printCard(c)).join(", "),
           );
           const reply = await interaction.editReply({ embeds: [embed] });
