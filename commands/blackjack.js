@@ -155,7 +155,7 @@ async function startGame(interaction, players) {
   for (const player of players) {
     // send turn message
     embed.setDescription(
-      `It is ${player.username}'s turn! You have 60 seconds or your stolen goods are forfeit`,
+      `It is ${player}'s turn! You have 60 seconds or your stolen goods are forfeit`,
     );
     const message = await interaction.editReply({ embeds: [embed] });
 
@@ -257,8 +257,10 @@ async function startGame(interaction, players) {
 
   if (!winner) {
     embed.setDescription("No one won...");
+  } else if (player === dealer) {
+    embed.setDescription(`The Dealer has won!`);
   } else {
-    embed.setDescription(`${winner.username} has won!`);
+    embed.setDescription(`${winner} has won!`);
   }
   await interaction.editReply({ embeds: [embed] });
 }
