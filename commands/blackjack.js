@@ -186,7 +186,14 @@ async function startGame(interaction, players) {
 
     // player's turn
     // only the current player can tap the buttons
-    const filter = (i) => i.user.id === player.id;
+    const filter = async (i) => {
+      if (i.user.id !== player.id) {
+	await i.reply({ content: "Not your turn yet", ephemeral: true });
+	return false;
+      }
+      return true;
+    }
+
     try {
       let move = await message.awaitMessageComponent({
         componentType: ComponentType.Button,
