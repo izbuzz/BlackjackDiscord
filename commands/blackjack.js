@@ -262,7 +262,14 @@ async function startGame(interaction, players) {
   } else {
     embed.setDescription(`${winner} has won!`);
   }
-  await interaction.editReply({ embeds: [embed] });
+
+  // disabled buttons
+  for (const button of row.components) {
+    button.setDisabled(true);
+  }
+  // send winning message
+  await interaction.editReply({ embeds: [embed],  components: [row] });
+
 }
 
 /**
