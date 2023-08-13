@@ -242,7 +242,8 @@ async function startGame(interaction, players) {
     }
   }
 
-  // all players had a turn, game has ende so decide the winner
+  // all players had a turn so the game has ended
+  // winner is the one with the highest score
   let winner;
   let max = 0;
   for (const [player, hand] of playerHands.entries()) {
@@ -262,7 +263,7 @@ async function startGame(interaction, players) {
     embed.setDescription(`${winner} has won!`);
   }
 
-  // disabled buttons
+  // disable buttons
   for (const button of row.components) {
     button.setDisabled(true);
   }
